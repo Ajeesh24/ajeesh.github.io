@@ -1,5 +1,5 @@
 import './styles.css';
-import resumeData from '../public/resume.json';
+import resumeData from './resume.json';
 
 type ResumeData = typeof resumeData;
 
