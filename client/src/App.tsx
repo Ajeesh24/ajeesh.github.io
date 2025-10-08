@@ -1,59 +1,10 @@
-import { useEffect, useState } from 'react';
 import './styles.css';
+import resumeData from '../public/resume.json';
 
-interface ResumeData {
-  personalInfo: {
-    name: string;
-    title: string;
-    email: string;
-    phone: string;
-    linkedin: string;
-  };
-  professionalSummary: string;
-  skills: Record<string, string[]>;
-  certifications: Array<{
-    title: string;
-    issuer: string;
-    date: string;
-  }>;
-  employmentHistory: Array<{
-    company: string;
-    position: string;
-    period: string;
-    responsibilities: string[];
-  }>;
-  education: {
-    degree: string;
-    institution: string;
-    year: string;
-    location: string;
-  };
-}
+type ResumeData = typeof resumeData;
 
 export default function App() {
-  const [resume, setResume] = useState<ResumeData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/resume.json')
-      .then(res => res.json())
-      .then(data => {
-        setResume(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to load resume:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
-
-  if (!resume) {
-    return <div className="error">Failed to load resume</div>;
-  }
+  const resume = resumeData;
 
   return (
     <main className="resume">
@@ -94,7 +45,6 @@ export default function App() {
           {resume.certifications.map((cert, idx) => (
             <div key={idx} className="cert">
               <strong>{cert.title}</strong>
-              <span>{cert.issuer} • {cert.date}</span>
             </div>
           ))}
         </div>
@@ -106,7 +56,7 @@ export default function App() {
           <div key={idx} className="job">
             <div className="job-header">
               <div>
-                <h4>{job.position}</h4>
+                <h4>{job.title}</h4>
                 <p className="company">{job.company}</p>
               </div>
               <span className="period">{job.period}</span>
@@ -124,8 +74,8 @@ export default function App() {
         <h3>Education</h3>
         <div className="education">
           <h4>{resume.education.degree}</h4>
-          <p>{resume.education.institution}</p>
-          <p>{resume.education.year} • {resume.education.location}</p>
+          <p>{resume.education.college}</p>
+          <p>{resume.education.university} • {resume.education.location}</p>
         </div>
       </section>
     </main>
