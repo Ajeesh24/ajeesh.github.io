@@ -31,7 +31,7 @@ jobs:
         run: npm ci
 
       - name: Build project
-        run: npm run build
+        run: npm run build -- --base=/ajeesh.github.io/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
