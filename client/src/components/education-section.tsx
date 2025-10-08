@@ -1,7 +1,12 @@
 import { GraduationCap, BookOpen } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import type { ResumeData } from "@/hooks/use-resume-data";
 
-const EducationSection = () => {
+interface EducationSectionProps {
+  resume: ResumeData;
+}
+
+const EducationSection = ({ resume }: EducationSectionProps) => {
   return (
     <section id="education" className="py-12 sm:py-16 print-section">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,13 +23,13 @@ const EducationSection = () => {
                 </div>
                 <div className="flex-1">
                   <h3 data-testid="education-degree" className="text-xl font-bold text-foreground mb-1">
-                    Bachelor of Engineering
+                    {resume.education.degree}
                   </h3>
                   <p data-testid="education-college" className="text-secondary font-medium mb-1">
-                    SRM Valliammai Engineering College
+                    {resume.education.college}
                   </p>
                   <p data-testid="education-university" className="text-sm text-muted-foreground">
-                    Anna University • Chennai
+                    {resume.education.university} • {resume.education.location}
                   </p>
                 </div>
               </div>

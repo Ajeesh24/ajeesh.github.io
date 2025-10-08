@@ -1,20 +1,12 @@
 import { Lightbulb } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import type { ResumeData } from "@/hooks/use-resume-data";
 
-const SkillsSection = () => {
-  const cloudSkills = [
-    "AWS Sagemaker", "AWS Bedrock", "EC2", "S3", "Lambda", "API Gateway", 
-    "DynamoDB", "IAM", "VPC", "EKS", "Kubernetes"
-  ];
+interface SkillsSectionProps {
+  resume: ResumeData;
+}
 
-  const developmentSkills = [
-    "Python", "LangChain", "OpenAI", "MLOps", "Ollama"
-  ];
-
-  const devopsSkills = [
-    "DevSecOps", "GitHub Actions", "Jenkins", "Terraform", "CloudFormation", "Docker"
-  ];
-
+const SkillsSection = ({ resume }: SkillsSectionProps) => {
   return (
     <section id="skills" className="py-12 sm:py-16 bg-muted/30 print-section">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,13 +18,12 @@ const SkillsSection = () => {
           <Card className="shadow-sm">
             <CardContent className="p-6 sm:p-8">
               <div className="grid gap-6">
-                {/* Cloud & Infrastructure Section */}
                 <div>
                   <h3 data-testid="heading-cloud-skills" className="text-sm font-semibold text-secondary uppercase tracking-wide mb-3">
                     Cloud & Infrastructure
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {cloudSkills.map((skill) => (
+                    {resume.skills.cloudInfrastructure.map((skill) => (
                       <span
                         key={skill}
                         data-testid={`skill-tag-${skill.toLowerCase().replace(/\s+/g, '-')}`}
@@ -44,13 +35,12 @@ const SkillsSection = () => {
                   </div>
                 </div>
                 
-                {/* Development Section */}
                 <div>
                   <h3 data-testid="heading-development-skills" className="text-sm font-semibold text-secondary uppercase tracking-wide mb-3">
                     Development & AI/ML
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {developmentSkills.map((skill) => (
+                    {resume.skills.developmentAI.map((skill) => (
                       <span
                         key={skill}
                         data-testid={`skill-tag-${skill.toLowerCase().replace(/\s+/g, '-')}`}
@@ -62,13 +52,12 @@ const SkillsSection = () => {
                   </div>
                 </div>
                 
-                {/* DevOps Section */}
                 <div>
                   <h3 data-testid="heading-devops-skills" className="text-sm font-semibold text-secondary uppercase tracking-wide mb-3">
                     DevOps & Infrastructure as Code
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {devopsSkills.map((skill) => (
+                    {resume.skills.devops.map((skill) => (
                       <span
                         key={skill}
                         data-testid={`skill-tag-${skill.toLowerCase().replace(/\s+/g, '-')}`}

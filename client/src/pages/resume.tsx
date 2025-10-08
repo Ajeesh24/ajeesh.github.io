@@ -6,31 +6,44 @@ import SkillsSection from "@/components/skills-section";
 import CertificationsSection from "@/components/certifications-section";
 import EmploymentHistory from "@/components/employment-history";
 import EducationSection from "@/components/education-section";
+import { useResumeData } from "@/hooks/use-resume-data";
 
 const Resume = () => {
+  const { data: resume } = useResumeData();
+
   useEffect(() => {
-    // Set page title and meta description for SEO
-    document.title = "Ajeesh Nechully Gangadharan - Platform Engineer | Resume";
-    
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute("content", 
-        "Staff-level Platform Engineer with over a decade of experience in cloud and AI/ML platforms. Expert in AWS, Python, Kubernetes, and MLOps. View my professional resume and experience."
-      );
+    if (resume) {
+      document.title = `${resume.personalInfo.name} - ${resume.personalInfo.title} | Resume`;
+      
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute("content", resume.professionalSummary);
+      }
     }
-  }, []);
+  }, [resume]);
+
+  if (!resume) {
+    return (
+      <div className="min-h-screen bg-background text-foreground antialiased flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="mt-4 text-muted-foreground">Loading resume...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased">
       <Navigation />
       
       <main className="pt-16">
-        <HeaderSection />
-        <ProfessionalSummary />
-        <SkillsSection />
-        <CertificationsSection />
-        <EmploymentHistory />
-        <EducationSection />
+        <HeaderSection resume={resume} />
+        <ProfessionalSummary resume={resume} />
+        <SkillsSection resume={resume} />
+        <CertificationsSection resume={resume} />
+        <EmploymentHistory resume={resume} />
+        <EducationSection resume={resume} />
         
         {/* GitHub Pages Deployment Info */}
         <section className="py-12 bg-gradient-to-br from-primary/5 to-accent/5 no-print">
