@@ -31,7 +31,9 @@ jobs:
         run: npm ci
 
       - name: Build project
-        run: npm run build -- --base=/ajeesh.github.io/
+        run: |
+          npx vite build --base=/ajeesh.github.io/
+          npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
