@@ -1,8 +1,6 @@
 # Overview
 
-This is a resume/portfolio website built as a full-stack application with a React frontend and Express backend. The application displays a professional resume for Ajeesh Nechully Gangadharan, a Staff-Level Platform Engineer, with sections for professional summary, skills, certifications, employment history, and education. The site is designed to be deployed to GitHub Pages and includes print-friendly styling for generating PDF resumes.
-
-**Data Management**: All resume content is stored in a single JSON file (`client/public/resume.json`) for easy editing without code changes. The application fetches and displays this data dynamically using React Query.
+This is a full-stack web application built as a digital resume/portfolio for Ajeesh Nechully Gangadharan, a Staff-Level Platform Engineer. The application is built using React for the frontend and Express.js for the backend, with Vite handling the development environment and build process. The resume data is stored in a JSON file and rendered through a React component with custom styling.
 
 # User Preferences
 
@@ -12,113 +10,128 @@ Preferred communication style: Simple, everyday language.
 
 ## Frontend Architecture
 
-**Framework & Build System**
-- Uses React 18 with TypeScript for type safety and modern development
-- Vite as the build tool and development server for fast HMR and optimized production builds
-- Wouter for lightweight client-side routing (alternative to React Router)
-- TanStack Query (React Query) for server state management and data fetching
+**Technology Stack**: React with TypeScript, Vite as the build tool
 
-**UI Component System**
-- Implements shadcn/ui component library based on Radix UI primitives
-- Uses Tailwind CSS for utility-first styling with custom CSS variables for theming
-- Component architecture follows the "New York" style variant from shadcn/ui
-- Custom path aliases configured for clean imports (@/components, @/lib, @/hooks)
+**Design Decision**: Single Page Application (SPA) architecture
+- **Problem**: Need to display resume information in a clean, maintainable format
+- **Solution**: React component-based architecture with data-driven rendering from JSON
+- **Rationale**: Separates presentation logic from data, making updates easy without code changes
 
-**Styling Strategy**
-- Tailwind CSS with custom design tokens for colors, spacing, and typography
-- CSS variables for dynamic theming support (light/dark modes prepared)
-- Custom fonts: Inter for sans-serif, Georgia for serif, JetBrains Mono for monospace
-- Print-specific styles for PDF generation capability
+**Styling Approach**: Custom CSS with utility classes
+- **Problem**: Need professional, print-friendly styling for resume display
+- **Solution**: Vanilla CSS with BEM-like class naming conventions
+- **Pros**: No external CSS framework overhead, full control over styling, better performance
+- **Cons**: More manual work for responsive design and cross-browser compatibility
 
-**State Management**
-- React Query for async state and API interactions
-- React hooks for local component state
-- Toast notifications system for user feedback
-- No global state management needed for current resume display use case
-
-**Data Loading Strategy**
-- Resume data is stored in `/client/public/resume.json` and fetched using React Query
-- Custom hook `useResumeData` handles data fetching with loading state
-- Data is loaded once at the page level and distributed to child components as props
-- Components receive typed resume data props, eliminating need for hardcoded content
-- Loading spinner displays during data fetch
+**Component Design**: Single root component (App.tsx) rendering all sections
+- Data loaded from static JSON file (`resume.json`)
+- Type-safe data access using TypeScript inference
+- Sections include: header, professional summary, skills, certifications, experience, and education
 
 ## Backend Architecture
 
-**Server Framework**
-- Express.js server with TypeScript
-- Vite middleware integration for development with HMR
-- Static file serving for production builds
-- Structured for API routes under `/api` prefix
+**Technology Stack**: Express.js with TypeScript running on Node.js
 
-**Development vs Production**
-- Development: Vite dev server with middleware mode for seamless React integration
-- Production: Pre-built static files served by Express
-- Replit-specific plugins for development (cartographer, dev banner, runtime error overlay)
+**Server Architecture**: Minimal API server with Vite integration
+- **Problem**: Need to serve the React application in both development and production
+- **Solution**: Express server with Vite middleware in development, static file serving in production
+- **Rationale**: Unified server approach for both environments with HMR support in development
 
-**Data Layer Design**
-- In-memory storage implementation (MemStorage class) as placeholder
-- Storage interface pattern allows easy swapping to database implementation
-- Designed for PostgreSQL integration with Drizzle ORM (schema defined but not actively used)
+**Middleware Pipeline**:
+1. JSON body parser with raw body capture (for potential webhook verification)
+2. URL-encoded body parser
+3. Custom request logging middleware for API routes
+4. Vite development middleware (dev mode only)
+5. Static file serving (production mode)
 
-**API Structure**
-- RESTful API design prepared but minimal routes implemented
-- Request logging middleware for development debugging
-- JSON body parsing with raw body preservation for webhook support
-- Error handling and response formatting utilities
+**Request Logging**: Custom middleware that tracks request duration and responses
+- Logs API requests with method, path, status code, duration, and response preview
+- Truncates long log lines to 80 characters for readability
+- Only logs routes starting with `/api` to reduce noise
 
-## Database Schema (Prepared but Not Active)
+**Development vs Production**:
+- Development: Vite middleware handles HMR and module resolution
+- Production: Compiled assets served from `dist/public` directory
+- Build process uses esbuild for server bundling and Vite for client bundling
 
-**ORM Choice: Drizzle**
-- Type-safe SQL query builder with excellent TypeScript integration
-- Schema-first approach with automatic type inference
-- Configured for PostgreSQL dialect with Neon serverless driver
-- Migration support via drizzle-kit
+## Data Storage
 
-**Current Schema**
-- Users table with UUID primary keys, username, and password fields
-- Zod validation schemas for type-safe data insertion
-- Schema located in shared directory for use by both client and server
+**Current Implementation**: Static JSON file (`client/src/resume.json`)
+- **Problem**: Need to store and display resume information
+- **Solution**: Type-safe JSON data file imported directly into React components
+- **Pros**: Simple, fast, no database overhead, version-controlled data
+- **Cons**: Requires rebuild/redeploy for data updates, not suitable for dynamic content
 
-**Note**: The application currently uses in-memory storage. The database schema and Drizzle configuration are prepared for future enhancement but not actively used in the current resume display functionality.
+**Database Infrastructure (Configured but Unused)**:
+- Drizzle ORM configured for PostgreSQL via Neon serverless
+- Session storage setup with `connect-pg-simple`
+- **Rationale for setup**: Prepared for potential future features like contact forms, analytics, or CMS capabilities
 
-## External Dependencies
+## Build and Development Pipeline
 
-**UI Component Libraries**
-- @radix-ui/* - Headless UI primitives for accessible components (accordion, dialog, dropdown, etc.)
-- embla-carousel-react - Touch-friendly carousel component
-- lucide-react - Icon library for consistent iconography
-- class-variance-authority - Type-safe component variant styling
-- cmdk - Command menu component (prepared but not used)
+**Module System**: ES Modules (ESM) throughout the entire stack
+- Both client and server use `"type": "module"` in package.json
+- Consistent import/export syntax across the codebase
 
-**Form Handling**
-- react-hook-form - Performant form validation (prepared via @hookform/resolvers)
-- zod - TypeScript-first schema validation
-- drizzle-zod - Integration between Drizzle schema and Zod validators
+**TypeScript Configuration**:
+- Path aliases: `@/*` for client source, `@shared/*` for shared types
+- Strict mode enabled for type safety
+- Module resolution set to "bundler" for modern tooling compatibility
 
-**Database & Storage** (Prepared for Future Use)
-- @neondatabase/serverless - PostgreSQL serverless driver for Neon
-- drizzle-orm - Type-safe ORM with PostgreSQL support
-- connect-pg-simple - PostgreSQL session store (prepared but not used)
+**Build Process**:
+1. Vite builds React app to `dist/public`
+2. esbuild bundles Express server to `dist/index.js`
+3. External packages not bundled on server (uses node_modules at runtime)
 
-**Utility Libraries**
-- date-fns - Modern date utility library
-- nanoid - Unique ID generation
-- clsx & tailwind-merge - Conditional CSS class composition
+**Development Workflow**:
+- Hot Module Replacement (HMR) via Vite
+- TypeScript compilation checking with `tsc`
+- Database schema push with Drizzle Kit
 
-**Development Tools**
-- @replit/vite-plugin-* - Replit-specific development enhancements
-- tsx - TypeScript execution for Node.js
-- esbuild - Fast JavaScript bundler for production server build
+# External Dependencies
 
-**Authentication** (Infrastructure Prepared)
-- Session management structure in place via connect-pg-simple
-- User schema defined but no authentication routes implemented
-- Designed for future password-based or OAuth integration
+## Core Framework Dependencies
 
-**Deployment**
-- Configured for GitHub Pages static deployment with base path `/ajeesh.github.io/`
-- Build command includes `--base=/ajeesh.github.io/` flag for proper asset loading on GitHub Pages
-- Vite builds optimized production bundle to dist/public
-- GitHub Actions workflow (`.github/workflows/deploy.yml`) automates deployment
-- Express server bundles separately for potential dynamic hosting
+- **React 18+**: UI library for component-based frontend
+- **Express.js**: Web server framework for API and static file serving
+- **TypeScript**: Type safety across the entire stack
+- **Vite**: Build tool and development server with HMR support
+
+## UI Component Library
+
+- **Radix UI**: Comprehensive set of unstyled, accessible UI primitives
+  - Includes: Dialog, Dropdown, Tabs, Toast, Tooltip, Select, and 20+ other components
+  - **Rationale**: Production-ready accessibility, headless design allows custom styling
+  - Currently imported but not actively used in the resume display
+
+## State Management and Data Fetching
+
+- **TanStack Query (React Query)**: Server state management and data fetching
+  - Configured but not currently utilized
+  - **Rationale**: Prepared for future API integration and dynamic data needs
+
+## Utility Libraries
+
+- **class-variance-authority (CVA)**: Utility for creating variant-based component APIs
+- **clsx**: Conditional className composition
+- **cmdk**: Command menu interface (imported but unused)
+- **date-fns**: Date manipulation and formatting
+- **zod** (via drizzle-zod): Runtime type validation and schema validation
+- **nanoid**: Unique ID generation
+
+## Database and ORM
+
+- **Drizzle ORM**: Type-safe SQL query builder
+- **@neondatabase/serverless**: Neon Postgres serverless driver
+  - Supports connection pooling and edge computing environments
+- **connect-pg-simple**: PostgreSQL session store for Express sessions
+
+## Development Tools
+
+- **tsx**: TypeScript execution engine for development server
+- **esbuild**: Fast JavaScript/TypeScript bundler for production server
+- **Replit plugins**: Runtime error overlay, cartographer, and dev banner for Replit environment
+
+## Build Considerations
+
+The application is configured for deployment on Replit with specialized plugins that only load in development mode when `REPL_ID` environment variable is present. The production build creates a self-contained application with bundled server code and static client assets.
