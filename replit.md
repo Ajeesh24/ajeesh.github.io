@@ -2,6 +2,8 @@
 
 This is a resume/portfolio website built as a full-stack application with a React frontend and Express backend. The application displays a professional resume for Ajeesh Nechully Gangadharan, a Staff-Level Platform Engineer, with sections for professional summary, skills, certifications, employment history, and education. The site is designed to be deployed to GitHub Pages and includes print-friendly styling for generating PDF resumes.
 
+**Data Management**: All resume content is stored in a single JSON file (`client/public/resume.json`) for easy editing without code changes. The application fetches and displays this data dynamically using React Query.
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -33,6 +35,13 @@ Preferred communication style: Simple, everyday language.
 - React hooks for local component state
 - Toast notifications system for user feedback
 - No global state management needed for current resume display use case
+
+**Data Loading Strategy**
+- Resume data is stored in `/client/public/resume.json` and fetched using React Query
+- Custom hook `useResumeData` handles data fetching with loading state
+- Data is loaded once at the page level and distributed to child components as props
+- Components receive typed resume data props, eliminating need for hardcoded content
+- Loading spinner displays during data fetch
 
 ## Backend Architecture
 
@@ -108,6 +117,8 @@ Preferred communication style: Simple, everyday language.
 - Designed for future password-based or OAuth integration
 
 **Deployment**
-- Configured for GitHub Pages static deployment
+- Configured for GitHub Pages static deployment with base path `/ajeesh.github.io/`
+- Build command includes `--base=/ajeesh.github.io/` flag for proper asset loading on GitHub Pages
 - Vite builds optimized production bundle to dist/public
+- GitHub Actions workflow (`.github/workflows/deploy.yml`) automates deployment
 - Express server bundles separately for potential dynamic hosting
